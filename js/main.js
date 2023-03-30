@@ -36,9 +36,20 @@ function playerPlays(){
                 board[row][column] = 'O';
                 cell.textContent = board[row][column];
 
-                //2:48:27
+                turn = 1;
+                playerDiv.textContent = `${turn === 0 ? 'Mi turno' : 'Turno del pc'}`;
+                const won = checkIfWinner();
 
-                pcPlays();
+                if(won == "none"){
+                    pcPlays();
+                    return;
+                }
+
+                if(won == "draw"){
+                    renderDraw();
+                    cell.removeEventListener('click', this);
+                    return;
+                }
             })
         }
     });
@@ -72,6 +83,7 @@ function pcPlays(){
             }
         }
         turn = 0;
+        playerDiv.textContent = `${turn === 0 ? 'Mi turno' : 'Turno de la máquina'}`;
         renderBoard();
         renderCurrentPlayer();
 
@@ -136,15 +148,15 @@ function checkIfCanWin(){
 }
 
 function checkIfWinner(){
-    const p1 = arr[0][0];
-    const p2 = arr[0][1];
-    const p3 = arr[0][2];
-    const p4 = arr[1][0];
-    const p5 = arr[1][1];
-    const p6 = arr[1][2];
-    const p7 = arr[2][0];
-    const p8 = arr[2][1];
-    const p9 = arr[2][2];
+    const p1 = board[0][0];
+    const p2 = board[0][1];
+    const p3 = board[0][2];
+    const p4 = board[1][0];
+    const p5 = board[1][1];
+    const p6 = board[1][2];
+    const p7 = board[2][0];
+    const p8 = board[2][1];
+    const p9 = board[2][2];
 
     const s1 = [p1, p2, p3];
     const s2 = [p4, p5, p6];
@@ -160,12 +172,12 @@ function checkIfWinner(){
     })
 
     if(res.length > 0){
-        if(res[0] === 'XXX'){
-            playerDiv.textContent = "PC Wins"
-            return 'pcwon'
+        if(res[0][0] === 'X'){
+            playerDiv.textContent = "¡Ganó la máquina!";
+            return 'pcwon';
         }else{
-            playerDiv.textContent = "User Wins"
-            return 'userwon'
+            playerDiv.textContent = "¡Ganaste!";
+            return 'userwon';
         }
     }else{
         let draw = true;
@@ -181,7 +193,7 @@ function checkIfWinner(){
 }
 
 function renderCurrentPlayer(){}
-playerDiv.textContent = `${turn === 0 ? 'Player turn' : 'Pc Turn'}`
+playerDiv.textContent = `${turn === 0 ? 'Mi turno' : 'Turno de la máquina'}`;
 
 function renderBoard(){
     const html = board.map(row =>{
